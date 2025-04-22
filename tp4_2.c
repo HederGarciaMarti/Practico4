@@ -14,13 +14,13 @@ struct Nodo {
     struct Nodo *Siguiente;
 }typedef Nodo;
 
-Tarea crearTarea(int *tareaId, char *descripcion){
+Tarea crearTarea(int *tareaId, char *descripcion, int duracion){
     Tarea nueva;
     nueva.TareaID = (*tareaId)++;
     int longitud = strlen(descripcion) + 1;
     nueva.Descripcion = malloc(sizeof(char)*longitud);
     strcpy(nueva.Descripcion, descripcion);
-    nueva.Duracion = 10 + rand()% 100;
+    nueva.Duracion = duracion;
     return nueva;
 } 
 
@@ -97,12 +97,40 @@ int longitudLista(Nodo *lista){
 }
 
 int main (){
-    int id = 1000;
+    int id = 1000, seguir = 1;
     Nodo * lista = crearListaVacia();
     printf("Cantidad de nodos en la lista: %d\n", longitudLista(lista));
     mostrarLista(lista, "tareas");
 
-    Tarea tarea1 = crearTarea(&id, "Carne");
+    while (seguir == 1)
+    {
+        char nombre[50];
+        int tiempo;
+
+        printf("Ingrese la descripcion de la tarea:\n");
+        fflush(stdin);
+        gets(nombre);
+        nombre[strcspn(nombre, "\n")] = 0;
+
+        do
+        {
+            printf("Ingrese la duracion de la tarea entre 10 y 100: \n");
+            scanf("%d", &tiempo);
+        } while (!(tiempo > 9 && tiempo < 101));
+        
+        Tarea nueva = crearTarea(&id, nombre, tiempo);
+      
+        Nodo *nodo = crearNodo(nueva);
+        
+        insertarNodoEnLista(&lista, nodo);
+        printf("Desea ingresar otra tarea\n1-SI\n2-NO\n");
+        scanf("%d", &seguir);
+    }
+    
+    mostrarLista(lista, "Tareas");
+
+
+   /* Tarea tarea1 = crearTarea(&id, "Carne");
     Tarea tarea2 = crearTarea(&id, "Pollo");
     Tarea tarea3 = crearTarea(&id, "Pescado");
 
@@ -115,6 +143,6 @@ int main (){
     insertarNodoEnLista(&lista, nodo3);
 
     mostrarLista(lista, "tareas");
-    printf("Cantidad de nodos en la lista: %d\n", longitudLista(lista));
+    printf("Cantidad de nodos en la lista: %d\n", longitudLista(lista));*/
     return 0;
 }
