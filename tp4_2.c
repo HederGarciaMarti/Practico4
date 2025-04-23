@@ -96,8 +96,40 @@ int longitudLista(Nodo *lista){
     
 }
 
+void moverTareaRealizada(Nodo **pendiente,Nodo **realizada){
+    int id;
+    printf("Ingrese el id de la tarea para marcar como realizada: \n");
+    scanf("%d", &id);
+    while (id != 0)
+    {
+        Nodo *anterior = NULL;
+        Nodo *actual = *pendiente;
+        while (actual != NULL && actual->T.TareaID != id)
+        {
+            anterior = actual;
+            actual = actual->Siguiente;
+        }
+        if (actual == NULL)
+        {
+            printf("No se encontró la tarea con ID %d.\n", id);
+        }else{
+            if (anterior == NULL)
+            {
+                *pendiente = actual->Siguiente;
+            }else{
+                anterior->Siguiente = actual->Siguiente;
+            }
+            insertarNodoEnLista(realizada, actual);
+            printf("Tarea %d movida a realizadas\n", id);
+        }
+        printf("\nIngrese otro ID de tarea para marcar como realizada: \nIngrese 0 para salir\n");
+        scanf("%d", &id);
+    }
+    
+}
+
 int main (){
-    int id = 1000, seguir = 1;
+    int id = 1000, seguir = 1, transferir;
     Nodo * lista = crearListaVacia();
     printf("Cantidad de nodos en la lista: %d\n", longitudLista(lista));
     mostrarLista(lista, "tareas");
@@ -128,6 +160,16 @@ int main (){
     }
     
     mostrarLista(lista, "Tareas");
+    Nodo *listaRealizadas = crearListaVacia();
+    printf("\nDesea transferir tareas a la lista de realizadas\n");
+    printf("1-Si\n2-No\n");
+    scanf("%d", &transferir);
+    if (transferir == 1) {
+        moverTareaRealizada(&lista, &listaRealizadas);
+        mostrarLista(lista, "Pendientes");
+        mostrarLista(listaRealizadas, "Realizadas");
+    }
+
 
 
    /* Tarea tarea1 = crearTarea(&id, "Carne");
