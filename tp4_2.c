@@ -145,6 +145,15 @@ Nodo *buscarNodo(Nodo *lista, int id, char *clave){
     return NULL;
 }
 
+void liberarLista(Nodo *lista) {
+    Nodo *aux;
+    while (lista != NULL) {
+        aux = lista;
+        lista = lista->Siguiente;
+        free(aux->T.Descripcion);
+        free(aux);
+    }
+}
 
 int main (){
     int id = 1000, seguir = 1, transferir, buscar, nuevoId = -1;
@@ -221,7 +230,8 @@ int main (){
     }
     
 
-
+    liberarLista(lista);
+    liberarLista(listaRealizadas);
    /* Tarea tarea1 = crearTarea(&id, "Carne");
     Tarea tarea2 = crearTarea(&id, "Pollo");
     Tarea tarea3 = crearTarea(&id, "Pescado");
