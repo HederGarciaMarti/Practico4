@@ -69,7 +69,7 @@ void mostrarLista(Nodo *lista, char *nombre){
         printf("Lista Vacia\n");
     }else
     {
-        printf("\tListado de: %s\n", nombre);
+        printf("\tListado de Tareas: %s\n", nombre);
         while (!esListaVacia(lista))
         {
             mostrarTarea(lista->T);
@@ -128,8 +128,27 @@ void moverTareaRealizada(Nodo **pendiente,Nodo **realizada){
     
 }
 
+Nodo *buscarNodo(Nodo *lista, int id, char *clave){
+    Nodo *aux = lista;
+    while (aux != NULL)
+    {
+        if (aux->T.TareaID == id && id != -1)
+        {
+            return aux;
+        }
+        if (clave != NULL && strlen(clave) > 0 && strstr(aux->T.Descripcion, clave))
+        {
+            return aux;
+        }
+        aux = aux->Siguiente;
+    }
+    return NULL;
+}
+
+
 int main (){
-    int id = 1000, seguir = 1, transferir;
+    int id = 1000, seguir = 1, transferir, buscar, nuevoId = -1;
+    char clave[50]="";
     Nodo * lista = crearListaVacia();
     printf("Cantidad de nodos en la lista: %d\n", longitudLista(lista));
     mostrarLista(lista, "tareas");
@@ -168,8 +187,39 @@ int main (){
         moverTareaRealizada(&lista, &listaRealizadas);
         mostrarLista(lista, "Pendientes");
         mostrarLista(listaRealizadas, "Realizadas");
+    }else{
+        mostrarLista(lista, "Pendientes");
     }
 
+    printf("Quiere buscar por:\n1-Nombre\n2-Id");
+    scanf("%d", &buscar);
+
+    if (buscar == 1)
+    {
+        nuevoId = -1;
+        printf("Ingrese el nombre:\n");
+        fflush(stdin);
+        gets(clave);
+
+    }else{
+        clave[0] = '\0';
+        printf("Ingrese el id:\n");
+        scanf("%d", &nuevoId);
+    }
+    Nodo *encontrar = buscarNodo(lista, nuevoId, clave);
+    if (encontrar != NULL) {
+        printf("Tarea encontrada en PENDIENTES:\n");
+        mostrarTarea(encontrar->T);
+    } else {
+        encontrar = buscarNodo(listaRealizadas, nuevoId, clave);
+        if (encontrar != NULL) {
+            printf("Tarea encontrada en REALIZADAS:\n");
+            mostrarTarea(encontrar->T);
+        } else {
+            printf("No se encontró la tarea.\n");
+        }
+    }
+    
 
 
    /* Tarea tarea1 = crearTarea(&id, "Carne");
